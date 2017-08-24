@@ -1,0 +1,19 @@
+---
+- name: Bootstrap
+  hosts: all
+  gather_facts: no
+  become: yes
+  serial: 1
+  roles:
+    - bootstrap
+
+- name: Install nginx, rtorrent, rutorrent
+  hosts: all
+  # remote_user: root
+  # remote_user: user
+  # become: yes
+  # become_method: sudo
+
+  roles:
+    - common
+    - rtorrent

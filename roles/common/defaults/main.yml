@@ -1,0 +1,3 @@
+---
+#Default varaibles for role
+sshd_config: /etc/ssh/sshd_config

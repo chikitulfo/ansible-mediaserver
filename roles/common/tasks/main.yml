@@ -28,7 +28,7 @@
   authorized_key:
     user: "{{ item.name }}"
     key: "{{ item.ssh_key }}"
-  when: ssh_key is defined
+  when: item.ssh_key is defined
   with_items: "{{ users }}"
 
 #Secure sshd logins

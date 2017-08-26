@@ -1,15 +1,52 @@
 ---
 - name: Install packages
   package:
-    name: {{ item }}
+    name: "{{ item }}"
     state: latest
   with_items:
     - git
     - zsh
     - tmux
 
+# Manage users
 - name: Add Users
   user:
-    name: {{ item }}
-  with_items: {{ users }}
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+  when: item.groups is undefined
+  with_items: "{{ users }}"
 
+- name: Add User and Groups
+  user:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+    groups: "{{item.groups}}"
+  when: item.groups is defined
+  with_items: "{{ users }}"
+
+- name: Add identity key to authorized keys on host
+  authorized_key:
+    user: "{{ item.name }}"
+    key: "{{ item.ssh_key }}"
+  when: ssh_key is defined
+  with_items: "{{ users }}"
+
+#Secure sshd logins
+- name: Disable empty password login
+  lineinfile:
+    dest: "{{ sshd_config }}"
+    regexp: "^#?PermitEmptyPasswords"
+    line: "PermitEmptyPasswords no"
+  notify: restart sshd
+
+- name: Disable remote root login
+  lineinfile:
+    dest: "{{ sshd_config }}"
+    regexp: "^#?PermitRootLogin"
+    line: "PermitRootLogin no"
+  notify: restart sshd
+
+
+ # Disable root login
+
+ #

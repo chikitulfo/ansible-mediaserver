@@ -1,0 +1,9 @@
+---
+users:
+  - name: user0
+    state: present
+
+  - name: user1
+    state: present
+    groups: "sudo, user0"
+    ssh_key: "ssh-rsa blabla"
